@@ -40,7 +40,7 @@ body.editing #workspace{grid-template-columns:minmax(0,1fr) minmax(200px,310px)}
 @media (orientation:portrait){body.editing #workspace{grid-template-columns:1fr}#sidebar{padding:5px}#effects{flex-wrap:nowrap}#effects button{padding:5px}body.editing #paper{max-height:60vh}}
 .saved-tile{cursor:pointer}.saved-tile:focus-visible{outline:4px solid #c25fcf}.saved-tile img{width:100%;height:clamp(125px,20vw,285px);object-fit:contain;background:white}.saved-tile .row{margin:3px}.saved-tile button{font-size:14px;padding:8px}.emptySaved{grid-column:1/-1;text-align:center;font-weight:800;font-size:20px}#home>.row{margin:14px 0 20px}#storageNote{margin:18px 0}
 </style></head><body><main><h1>🦄 Magic Coloring 🌈 <small style="font-size:12px">v3.0 Prototype 1 · Made by Mikkel</small></h1>
-<section id="home"><div class="row"><button id="showPictures" class="active">🎨 Nye tegninger</button><button id="showSaved">💖 Mine malerier <span id="savedCount"></span></button><button id="showMagic">✨ Lav magisk billede</button><button id="showMagicAlbum">🪄 Mine magiske billeder</button></div><div id="gallery" class="gallery"></div><section id="magicMaker" class="hide"><h2>✨ Lav dit eget magiske billede</h2><p>Vælg en figur, et sted og lidt pynt 💖</p><div id="magicChoices"></div><button id="makeMagic" style="font-size:23px;margin:18px 0;padding:18px">🪄 Lav mit magiske billede!</button><p id="magicInfo" role="status">🧪 Dette er en gratis demo. Rigtig AI kommer senere.</p><div style="margin:16px auto;max-width:550px;padding:14px;border:2px solid #d7b7ed;border-radius:16px;background:#fff8ff"><button id="testAIConnection" type="button">☁️ Test AI-forbindelse</button><p id="aiConnectionStatus" role="status" style="font-weight:700">Testen koster ikke noget.</p></div></section><div id="magicAlbum" class="gallery hide"></div><div id="savedGallery" class="gallery hide"></div><div id="savedActions" class="row hide"><button id="deleteAllPaintings">🗑️ Slet alle malerier</button></div><p id="storageNote" class="subtitle hide">Dine malerier gemmes kun på denne iPad 💖</p></section>
+<section id="home"><div class="row"><button id="showPictures" class="active">🎨 Nye tegninger</button><button id="showSaved">💖 Mine malerier <span id="savedCount"></span></button><button id="showMagic">✨ Lav magisk billede</button><button id="showMagicAlbum">🪄 Mine magiske billeder</button></div><div id="gallery" class="gallery"></div><section id="magicMaker" class="hide"><h2>✨ Lav dit eget magiske billede</h2><p>Vælg en figur, et sted og lidt pynt 💖</p><div id="magicChoices"></div><button id="makeMagic" style="font-size:23px;margin:18px 0;padding:18px">🪄 Lav mit magiske billede!</button><p id="magicInfo" role="status">✨ AI-billeder bruger OpenAI-kredit. En voksen skal indtaste forældrekoden. Maks. 5 forsøg på billedgenerering pr. dag (foreløbig grænse).</p><div style="margin:16px auto;max-width:550px;padding:14px;border:2px solid #d7b7ed;border-radius:16px;background:#fff8ff"><button id="testAIConnection" type="button">☁️ Test AI-forbindelse</button><p id="aiConnectionStatus" role="status" style="font-weight:700">Testen koster ikke noget.</p></div></section><div id="magicAlbum" class="gallery hide"></div><div id="savedGallery" class="gallery hide"></div><div id="savedActions" class="row hide"><button id="deleteAllPaintings">🗑️ Slet alle malerier</button></div><p id="storageNote" class="subtitle hide">Dine malerier gemmes kun på denne iPad 💖</p></section>
 <section id="editor" class="hide"><div id="workspace"><div class="row" id="tools"><button id="back">🏠 Billeder</button><button id="fill" class="active">🪣 Fyld felter</button><button id="brush">🖌️ Pensel</button><button id="size">● Pensel: mellem</button></div><div id="paper"></div><div id="sidebar"><div class="row" id="palettetabs"><button id="normalTab" class="active">🎨 Farver</button><button id="glitterTab">✨ Magiske farver</button></div><div class="row hide" id="effects"><button class="effect active" data-effect="sparkle">✨ Glimmer</button><button class="effect" data-effect="diamond">💎 Diamant</button><button class="effect" data-effect="rainbow">🌈 Regnbue</button></div><div id="palette"></div><div class="row" id="secondary"><button id="undo">↶ Fortryd</button><button id="clear">✨ Start forfra</button><button id="download">💾 Gem maleri</button><button id="finishPainting">🏆 Jeg er færdig!</button><button id="soundToggle" aria-pressed="true">🔔 Lyd til</button></div><div id="toast" aria-live="polite"></div></div></div></section><footer style="text-align:center;font-size:12px;padding:6px">Magic Coloring v2.0 Prototype 1 · Made by Mikkel 💖</footer></main>
 <script>
 const NS='http://www.w3.org/2000/svg',S=(tag,attrs={},children='')=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ')}>${children}</${tag}>`;
@@ -304,18 +304,36 @@ async function renderMagicAlbum(){
  }catch(e){$('magicAlbum').textContent='Kunne ikke åbne albummet. Prøv igen.';console.error(e)}
 }
 function openMagicImage(item){startNewPainting();selected=-999;activeMagicName=item.name;custom=null;history=[];openRaster(item.src)}
-async function makeDemoMagic(){
+let parentCodeInSession='';
+async function makeAIMagic(){
+ const button=$('makeMagic'),status=$('magicInfo');
+ if(button.disabled)return;
+ const passphrase=parentCodeInSession||prompt('🔐 Forælder: Indtast adgangskoden til AI-billeder. Hver generering bruger OpenAI-kredit.');
+ if(passphrase===null)return;
+ if(!passphrase.trim()){status.textContent='🔐 En forældrekode er nødvendig.';return}
+ button.disabled=true;button.textContent='🪄 Tryller et billede frem...';status.textContent='✨ AI tegner nu. Vent lidt – det kan tage op til et minut. Tryk ikke igen.';
  const chosen=magicOptions.map((g,j)=>g.values[magicChoice[j]]);
- const lookup=[3,11,1,2,5];const index=lookup[magicChoice[0]];const source=pictures[index];
- const decoration=magicChoice[2]===0?heart(410,100,.8):magicChoice[2]===1?star(405,100,25):magicChoice[2]===2?heart(405,110,.65):star(405,105,23);
- const svg=svgContent(source[1]()+decoration);
- const src='data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svg);
- const item={id:'magic-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:chosen.join(' · '),src,created:Date.now()};
- try{await magicPut(item);$('magicInfo').textContent='💖 Demo-tegningen er gemt i Mine magiske billeder!';openMagicImage(item)}catch(e){console.error(e);$('magicInfo').textContent='⚠️ Kunne ikke gemme tegningen.'}
+ const keys=[['unicorn','princess','cat','rabbit','butterfly'],['castle','rainbow','meadow','clouds','snow'],['hearts','stars','flowers','magic','butterflies']];
+ try{
+  const controller=new AbortController(),timer=setTimeout(()=>controller.abort(),110000);
+  let response;try{response=await fetch('https://magic-coloring-ai.mikkels90.workers.dev/generate',{method:'POST',headers:{'content-type':'application/json','x-parent-passphrase':passphrase},body:JSON.stringify({character:keys[0][magicChoice[0]],place:keys[1][magicChoice[1]],extra:keys[2][magicChoice[2]]}),signal:controller.signal})}finally{clearTimeout(timer)}
+  const result=await response.json();
+  if(!response.ok){
+   if(response.status===401){parentCodeInSession='';throw new Error('Forkert forældrekode. Prøv igen.')}
+   if(response.status===429)throw new Error('Dagens grænse er nået. Prøv igen i morgen.');
+   throw new Error('AI kunne ikke generere billedet: '+(result.details||result.error||'ukendt fejl'));
+  }
+  if(!result.image||!result.image.startsWith('data:image/'))throw new Error('AI sendte ikke et gyldigt billede.');
+  parentCodeInSession=passphrase;
+  const item={id:'magic-'+Date.now()+'-'+Math.random().toString(36).slice(2,7),name:chosen.join(' · '),src:result.image,created:Date.now()};
+  try{await magicPut(item)}catch(e){console.error('Image storage',e);throw new Error('Billedet blev lavet, men kunne ikke gemmes på denne enhed. Tjek ledig plads.')}
+  status.textContent='💖 Dit AI-billede er gemt i Mine magiske billeder!';openMagicImage(item);
+ }catch(e){console.error('AI image generation',e);status.textContent='⚠️ '+(e.name==='AbortError'?'Det tog for lang tid. Tjek albummet, før du prøver igen.':e.message||'Noget gik galt.')}
+ finally{button.disabled=false;button.textContent='🪄 Lav mit magiske billede!'}
 }
 $('showMagic').onclick=()=>showTab('maker');
 $('showMagicAlbum').onclick=()=>showTab('magic');
-$('makeMagic').onclick=makeDemoMagic;
+$('makeMagic').onclick=makeAIMagic;
 renderMagicChoices();
 </script>
 <script>
