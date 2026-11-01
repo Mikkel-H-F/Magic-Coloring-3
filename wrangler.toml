@@ -6,3 +6,7 @@ compatibility_date = "2026-10-01"
 # Configure OPENAI_API_KEY and PARENT_PASSPHRASE as encrypted secrets
 # in Cloudflare dashboard, not in this file.
 # Bind a KV namespace as LIMITS in Cloudflare before enabling generation.
+
+[[kv_namespaces]]
+binding = "LIMITS"
+id = "18d437b4d5414e30ae902f3eb968cba6"
