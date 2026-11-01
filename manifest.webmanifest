@@ -11,10 +11,10 @@
   "orientation": "any",
   "icons": [
     {
-      "src": "./magic-unicorn.png",
+      "src": "./icon512.png?v=316",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
