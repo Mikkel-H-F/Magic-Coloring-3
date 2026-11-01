@@ -309,7 +309,7 @@ $('finishPainting').onclick=async()=>{if(!editorReady||paintLocked){$('toast').t
 document.addEventListener('dblclick',e=>e.preventDefault(),{passive:false});document.addEventListener('gesturestart',e=>e.preventDefault(),{passive:false});document.addEventListener('touchmove',e=>{if(document.body.classList.contains('editing')&&e.target.closest('#paper'))e.preventDefault()},{passive:false});
 gallery();dbOpen().then(renderSaved).catch(e=>console.warn('Local storage unavailable',e));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)savePainting()});window.addEventListener('pagehide',()=>savePainting());
-</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>reg.update()).catch(error=>console.warn("Offline setup failed",error)))}</script>
+</script><script>if("serviceWorker" in navigator){window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"}).then(reg=>{reg.update();document.addEventListener("visibilitychange",()=>{if(!document.hidden)reg.update().catch(()=>{})});setInterval(()=>{if(!document.hidden)reg.update().catch(()=>{})},15*60*1000)}).catch(error=>console.warn("Offline setup failed",error)))}</script>
 <script>
 let activeMagicName=null;
 const magicOptions=[
