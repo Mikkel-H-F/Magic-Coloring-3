@@ -1,0 +1,20 @@
+{
+  "name": "Magic Coloring – Magiske malerier",
+  "short_name": "Magic Coloring",
+  "description": "Farvelæg enhjørninger, regnbuer og magiske billeder",
+  "lang": "da",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#e9d8ff",
+  "theme_color": "#b77cf0",
+  "orientation": "any",
+  "icons": [
+    {
+      "src": "./magic-unicorn.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
