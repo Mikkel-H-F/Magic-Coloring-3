@@ -29,7 +29,7 @@ export default {async fetch(request,env){
  if(!allowed.includes(data.character)||!places.includes(data.place)||!extras.includes(data.extra))return json({error:'Invalid choices'},400);
  // Note: KV read-then-write is not atomic; for a strict cost cap use a Durable Object.
  await env.LIMITS.put(dailyKey,String(used+1),{expirationTtl:86400});
- const prompt='Black and white coloring page for a 4-year-old child. One cute '+data.character+' in '+data.place+' with a few '+data.extra+'. Simple bold fully enclosed black outlines, very large open coloring regions, few details, friendly face, white background. No grayscale, no shading, no texture, no text. Square composition. Not intricate. Make a new unique drawing.';
+ const prompt='Black and white coloring page for a 4-year-old child. One cute '+data.character+' in '+data.place+' with a few '+data.extra+'. Bold clean fully enclosed black outlines with medium detail: a few charming decorative features on the character, some simple background objects and playful details related to the chosen setting and extras. Keep large, easy-to-color enclosed regions suitable for a 4-year-old, and avoid tiny intricate patterns. Friendly expressive face, pure white background, no grayscale, no shading, no texture, no text. Square composition. Make a new unique drawing.';
  try{
   const response=await fetch('https://api.openai.com/v1/images/generations',{method:'POST',headers:{authorization:'Bearer '+env.OPENAI_API_KEY,'content-type':'application/json'},body:JSON.stringify({model:'gpt-image-1-mini',prompt,size:'1024x1024',quality:'low',n:1})});
   const result=await response.json();
