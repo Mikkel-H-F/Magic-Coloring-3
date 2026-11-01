@@ -44,7 +44,7 @@ body.editing #workspace{grid-template-columns:minmax(0,1fr) minmax(200px,310px)}
 #puzzleBoard{width:100%;aspect-ratio:1;display:grid;border:5px solid #b39afc;border-radius:16px;overflow:hidden;background:#fff}
 .puzzleCell{position:relative;border:1px dashed #ba9ecf;min-width:0;min-height:0;background-size:100% 100%;touch-action:manipulation}
 .puzzleCell::before{content:'';position:absolute;inset:0;background:var(--puzzle-image);background-size:var(--puzzle-size);background-position:var(--puzzle-position);opacity:.16;pointer-events:none}
-.puzzleCell.done::before{opacity:1}
+.puzzleCell.done::before{opacity:1}#puzzleBoard.noHint .puzzleCell:not(.done)::before{opacity:0}.puzzleCell.snap{animation:puzzleSnap .25s ease-out}@keyframes puzzleSnap{0%{transform:scale(.75)}65%{transform:scale(1.07)}100%{transform:scale(1)}}.puzzleGhost{position:fixed;pointer-events:none;z-index:9999;opacity:.9;border:3px solid #ff60ba;border-radius:9px;box-shadow:0 9px 25px #7e409b77}
 .puzzleCell.done{border:1px solid #b8e2b7}
 .puzzleCell.target{outline:4px solid #ff65ba;outline-offset:-4px}
 #puzzlePieces{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;max-height:65vh;overflow:auto;padding:8px;border-radius:15px;background:#f9eaff}
@@ -53,7 +53,7 @@ body.editing #workspace{grid-template-columns:minmax(0,1fr) minmax(200px,310px)}
 .puzzlePiece:disabled{opacity:.25}
 @media(max-width:650px){#puzzleLayout{grid-template-columns:minmax(0,1fr) minmax(115px,34%);gap:7px}#puzzlePieces{gap:5px;padding:4px}.puzzlePiece{min-height:40px}}
 </style></head><body><main><h1>🦄 Magic Coloring 🌈 <small style="font-size:12px">v3.0 · Made by Mikkel</small></h1>
-<section id="home"><div class="row"><button id="showPictures" class="active">🎨 Nye tegninger</button><button id="showSaved">💖 Mine malerier <span id="savedCount"></span></button><button id="showMagic">✨ Lav magisk billede</button><button id="showMagicAlbum">🪄 Mine magiske billeder</button><button id="showPuzzles">🧩 Magiske puslespil</button></div><div id="gallery" class="gallery"></div><section id="magicMaker" class="hide"><h2>✨ Lav dit eget magiske billede</h2><p>Vælg en figur, et sted og lidt pynt 💖</p><div id="magicChoices"></div><button id="makeMagic" style="font-size:23px;margin:18px 0;padding:18px">🪄 Lav mit magiske billede!</button><p id="magicInfo" role="status">✨ AI-billeder bruger OpenAI-kredit. En voksen skal indtaste forældrekoden. Maks. 5 forsøg på billedgenerering pr. dag (foreløbig grænse).</p></section><div id="magicTransfer" class="row hide"><button id="exportMagic">📦 Eksportér billeder</button><button id="importMagic">📥 Importér billeder</button><input id="importMagicFile" type="file" accept=".json,application/json" hidden><p id="magicTransferStatus" role="status"></p></div><div id="magicAlbum" class="gallery hide"></div><section id="puzzleArea" class="hide"><h2>🧩 Magiske puslespil</h2><p>Vælg et magisk billede, og saml brikkerne! 💖</p><div class="row" id="puzzleLevels"><button data-level="4">🐣 4 brikker</button><button data-level="9" class="active">🦄 9 brikker</button><button data-level="16">👑 16 brikker</button></div><div id="puzzlePicker" class="gallery"></div><div id="puzzleGame" class="hide"><div class="row"><button id="puzzleBack">↩️ Vælg billede</button><button id="puzzleRestart">🔀 Bland igen</button></div><p id="puzzleStatus" role="status" style="font-weight:850;text-align:center"></p><div id="puzzleLayout"><div id="puzzleBoard"></div><div id="puzzlePieces"></div></div></div></section><div id="savedGallery" class="gallery hide"></div><div id="savedActions" class="row hide"><button id="deleteAllPaintings">🗑️ Slet alle malerier</button></div><p id="storageNote" class="subtitle hide">Dine malerier gemmes kun på denne iPad 💖</p></section>
+<section id="home"><div class="row"><button id="showPictures" class="active">🎨 Nye tegninger</button><button id="showSaved">💖 Mine malerier <span id="savedCount"></span></button><button id="showMagic">✨ Lav magisk billede</button><button id="showMagicAlbum">🪄 Mine magiske billeder</button><button id="showPuzzles">🧩 Magiske puslespil</button></div><div id="gallery" class="gallery"></div><section id="magicMaker" class="hide"><h2>✨ Lav dit eget magiske billede</h2><p>Vælg en figur, et sted og lidt pynt 💖</p><div id="magicChoices"></div><button id="makeMagic" style="font-size:23px;margin:18px 0;padding:18px">🪄 Lav mit magiske billede!</button><p id="magicInfo" role="status">✨ AI-billeder bruger OpenAI-kredit. En voksen skal indtaste forældrekoden. Maks. 5 forsøg på billedgenerering pr. dag (foreløbig grænse).</p></section><div id="magicTransfer" class="row hide"><button id="exportMagic">📦 Eksportér billeder</button><button id="importMagic">📥 Importér billeder</button><input id="importMagicFile" type="file" accept=".json,application/json" hidden><p id="magicTransferStatus" role="status"></p></div><div id="magicAlbum" class="gallery hide"></div><section id="puzzleArea" class="hide"><h2>🧩 Magiske puslespil</h2><p>Vælg et magisk billede, og saml brikkerne! 💖</p><div class="row" id="puzzleLevels"><button data-level="4">🐣 4 brikker</button><button data-level="9" class="active">🦄 9 brikker</button><button data-level="16">👑 16 brikker</button><button data-level="25">🏆 25 brikker</button><button id="puzzleHint" type="button" aria-pressed="true">👀 Hjælp: til</button></div><div id="puzzlePicker" class="gallery"></div><div id="puzzleGame" class="hide"><div class="row"><button id="puzzleBack">↩️ Vælg billede</button><button id="puzzleRestart">🔀 Bland igen</button></div><p id="puzzleStatus" role="status" style="font-weight:850;text-align:center"></p><div id="puzzleLayout"><div id="puzzleBoard"></div><div id="puzzlePieces"></div></div></div></section><div id="savedGallery" class="gallery hide"></div><div id="savedActions" class="row hide"><button id="deleteAllPaintings">🗑️ Slet alle malerier</button></div><p id="storageNote" class="subtitle hide">Dine malerier gemmes kun på denne iPad 💖</p></section>
 <section id="editor" class="hide"><div id="workspace"><div class="row" id="tools"><button id="back">🏠 Billeder</button><button id="fill" class="active">🪣 Fyld felter</button><button id="brush">🖌️ Pensel</button><button id="size">● Pensel: mellem</button></div><div id="paper"></div><div id="sidebar"><div class="row" id="palettetabs"><button id="normalTab" class="active">🎨 Farver</button><button id="glitterTab">✨ Magiske farver</button></div><div class="row hide" id="effects"><button class="effect active" data-effect="sparkle">✨ Glimmer</button><button class="effect" data-effect="diamond">💎 Diamant</button><button class="effect" data-effect="rainbow">🌈 Regnbue</button></div><div id="palette"></div><div class="row" id="secondary"><button id="undo">↶ Fortryd</button><button id="clear">✨ Start forfra</button><button id="download">💾 Gem maleri</button><button id="finishPainting">🏆 Jeg er færdig!</button><button id="soundToggle" aria-pressed="true">🔔 Lyd til</button></div><div id="toast" aria-live="polite"></div></div></div></section><footer style="text-align:center;font-size:12px;padding:6px">Magic Coloring v3.0 · Made by Mikkel 💖</footer></main>
 <script>
 const NS='http://www.w3.org/2000/svg',S=(tag,attrs={},children='')=>`<${tag} ${Object.entries(attrs).map(([k,v])=>`${k}="${v}"`).join(' ')}>${children}</${tag}>`;
@@ -349,21 +349,28 @@ $('exportMagic').onclick=()=>exportMagicAlbum().catch(e=>$('magicTransferStatus'
 $('importMagic').onclick=()=>$('importMagicFile').click();
 $('importMagicFile').onchange=e=>importMagicAlbum(e.target.files[0]);
 function openMagicImage(item){startNewPainting();selected=-999;activeMagicName=item.name;custom=null;history=[];openRaster(item.src)}
-let puzzleLevel=9,puzzleImage=null,puzzlePlaced=new Set(),puzzleSelected=null,puzzleTouch=null;
+let puzzleLevel=9,puzzleImage=null,puzzlePlaced=new Set(),puzzleSelected=null,puzzleTouch=null,puzzleHints=true;
 function puzzleImageCSS(src){return 'url("'+src.replace(/"/g,'%22')+'")'}
 async function renderPuzzlePicker(){
  const picker=$('puzzlePicker');$('puzzleGame').classList.add('hide');picker.classList.remove('hide');
  try{
-  const images=(await magicList()).sort((a,b)=>b.created-a.created);
-  picker.innerHTML=images.length?images.map(x=>'<button class="tile" data-puzzle="'+safeMagic(x.id)+'"><img src="'+x.src+'" alt=""><span>'+safeMagic(x.name)+'</span></button>').join(''):'<p>🦄 Lav eller importér først et magisk billede!</p>';
-  picker.querySelectorAll('[data-puzzle]').forEach(b=>b.onclick=()=>{const item=images.find(x=>x.id===b.dataset.puzzle);if(item)startPuzzle(item)});
- }catch(e){picker.textContent='Kunne ikke åbne billederne.'}
+  const magic=(await magicList()).map(x=>({...x,category:'✨ AI-billeder'}));
+  const saved=(await dbAll()).filter(x=>typeof x.image==='string').map(x=>({id:'saved-'+x.id,name:x.name||'Mit maleri',src:x.image,category:'💖 Mine malerier'}));
+  const standard=pictures.map((x,i)=>({id:'standard-'+i,name:x[0],src:'data:image/svg+xml;charset=utf-8,'+encodeURIComponent(svgContent(x[1]())),category:'🎨 Standardtegninger'}));
+  const images=[...magic,...saved,...standard];
+  picker.replaceChildren();
+  for(const category of ['✨ AI-billeder','💖 Mine malerier','🎨 Standardtegninger']){
+   const group=images.filter(x=>x.category===category);if(!group.length)continue;
+   const heading=document.createElement('h3');heading.textContent=category;heading.style.gridColumn='1/-1';picker.appendChild(heading);
+   for(const item of group){const button=document.createElement('button');button.className='tile';const img=document.createElement('img');img.src=item.src;img.alt='';const label=document.createElement('span');label.textContent=item.name;button.append(img,label);button.onclick=()=>startPuzzle(item);picker.appendChild(button)}
+  }
+ }catch(e){console.error(e);picker.textContent='Kunne ikke åbne billederne.'}
 }
 function startPuzzle(item){
  puzzleImage=item;puzzlePlaced=new Set();puzzleSelected=null;
  $('puzzlePicker').classList.add('hide');$('puzzleGame').classList.remove('hide');
  const side=Math.sqrt(puzzleLevel),board=$('puzzleBoard'),pieces=$('puzzlePieces'),src=puzzleImageCSS(item.src);
- board.style.gridTemplateColumns='repeat('+side+',1fr)';board.replaceChildren();pieces.replaceChildren();
+ board.classList.toggle('noHint',!puzzleHints);board.style.gridTemplateColumns='repeat('+side+',1fr)';board.replaceChildren();pieces.replaceChildren();
  for(let n=0;n<puzzleLevel;n++){
   const cell=document.createElement('button');cell.className='puzzleCell';cell.dataset.slot=n;cell.setAttribute('aria-label','Plads '+(n+1));
   const col=n%side,row=Math.floor(n/side),position=(side===1?'0%':col*100/(side-1)+'%')+' '+(side===1?'0%':row*100/(side-1)+'%');
@@ -375,7 +382,28 @@ function startPuzzle(item){
  for(const n of order){
   const piece=document.createElement('button');piece.className='puzzlePiece';piece.dataset.piece=n;piece.setAttribute('aria-label','Brik '+(n+1));const col=n%side,row=Math.floor(n/side);
   piece.style.setProperty('--puzzle-image',src);piece.style.setProperty('--puzzle-size',(side*100)+'% '+(side*100)+'%');piece.style.setProperty('--puzzle-position',(col*100/(side-1))+'% '+(row*100/(side-1))+'%');
-  piece.onclick=()=>selectPuzzle(n);piece.addEventListener('pointerdown',e=>{if(e.pointerType==='mouse')return;puzzleTouch={id:n,x:e.clientX,y:e.clientY}});piece.addEventListener('pointerup',e=>{if(!puzzleTouch||puzzleTouch.id!==n)return;const moved=Math.hypot(e.clientX-puzzleTouch.x,e.clientY-puzzleTouch.y)>20;puzzleTouch=null;if(!moved)return;const el=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');if(el){puzzleSelected=n;placePuzzle(Number(el.dataset.slot))}});pieces.appendChild(piece);
+  piece.onclick=()=>{if(!piece.dataset.dragged)selectPuzzle(n);else delete piece.dataset.dragged};
+  piece.addEventListener('pointerdown',e=>{
+   if(e.button!==0)return;
+   const rect=piece.getBoundingClientRect();puzzleTouch={id:n,pointer:e.pointerId,x:e.clientX,y:e.clientY,rect,ghost:null};
+   piece.setPointerCapture(e.pointerId);
+  });
+  piece.addEventListener('pointermove',e=>{
+   const drag=puzzleTouch;if(!drag||drag.id!==n||drag.pointer!==e.pointerId)return;
+   if(!drag.ghost&&Math.hypot(e.clientX-drag.x,e.clientY-drag.y)<9)return;
+   if(!drag.ghost){const ghost=piece.cloneNode(false);ghost.className='puzzlePiece puzzleGhost';ghost.style.width=drag.rect.width+'px';ghost.style.height=drag.rect.height+'px';document.body.appendChild(ghost);drag.ghost=ghost;piece.style.opacity='.35'}
+   drag.ghost.style.left=(e.clientX-drag.rect.width/2)+'px';drag.ghost.style.top=(e.clientY-drag.rect.height/2)+'px';
+  });
+  const finishDrag=e=>{
+   const drag=puzzleTouch;if(!drag||drag.id!==n||drag.pointer!==e.pointerId)return;
+   puzzleTouch=null;if(!drag.ghost)return;
+   drag.ghost.remove();piece.style.opacity='';piece.dataset.dragged='1';
+   const target=document.elementFromPoint(e.clientX,e.clientY)?.closest('[data-slot]');
+   if(target){puzzleSelected=n;placePuzzle(Number(target.dataset.slot))}
+   else $('puzzleStatus').textContent='🌈 Træk brikken hen til en plads på billedet.';
+  };
+  piece.addEventListener('pointerup',finishDrag);piece.addEventListener('pointercancel',e=>{if(puzzleTouch?.id===n){puzzleTouch.ghost?.remove();piece.style.opacity='';puzzleTouch=null}});
+  pieces.appendChild(piece);
  }
  updatePuzzleStatus();
 }
@@ -383,13 +411,14 @@ function selectPuzzle(n){if(puzzlePlaced.has(n))return;puzzleSelected=n;document
 function placePuzzle(slot){
  if(puzzleSelected===null||puzzlePlaced.has(slot))return;
  if(puzzleSelected!==slot){const el=$('puzzleBoard').children[slot];el.classList.add('target');setTimeout(()=>el.classList.remove('target'),450);$('puzzleStatus').textContent='🌈 Prøv en anden plads!';return}
- puzzlePlaced.add(slot);$('puzzleBoard').children[slot].classList.add('done');const piece=$('puzzlePieces').querySelector('[data-piece="'+slot+'"]');if(piece)piece.remove();puzzleSelected=null;updatePuzzleStatus();
+ puzzlePlaced.add(slot);$('puzzleBoard').children[slot].classList.add('done','snap');const piece=$('puzzlePieces').querySelector('[data-piece="'+slot+'"]');if(piece)piece.remove();puzzleSelected=null;updatePuzzleStatus();
  if(puzzlePlaced.size===puzzleLevel){$('puzzleStatus').textContent='🎉🦄 HURRA! Du samlede hele puslespillet! 🌈💖';$('puzzleBoard').animate([{transform:'scale(1)'},{transform:'scale(1.04)'},{transform:'scale(1)'}],{duration:700})}
 }
 function updatePuzzleStatus(){$('puzzleStatus').textContent='🧩 '+puzzlePlaced.size+' af '+puzzleLevel+' brikker på plads! Vælg en brik og tryk på dens plads.'}
 document.querySelectorAll('#puzzleLevels button').forEach(b=>b.onclick=()=>{puzzleLevel=Number(b.dataset.level);document.querySelectorAll('#puzzleLevels button').forEach(x=>x.classList.toggle('active',x===b));if(puzzleImage&&!$('puzzleGame').classList.contains('hide'))startPuzzle(puzzleImage)});
 $('puzzleBack').onclick=renderPuzzlePicker;
 $('puzzleRestart').onclick=()=>{if(puzzleImage)startPuzzle(puzzleImage)};
+$('puzzleHint').onclick=()=>{puzzleHints=!puzzleHints;$('puzzleHint').textContent=puzzleHints?'👀 Hjælp: til':'🙈 Hjælp: fra';$('puzzleHint').setAttribute('aria-pressed',String(puzzleHints));$('puzzleBoard').classList.toggle('noHint',!puzzleHints)};
 let parentCodeInSession='';
 async function makeAIMagic(){
  const button=$('makeMagic'),status=$('magicInfo');
