@@ -1,0 +1,8 @@
+name = "magic-coloring-ai"
+main = "cloudflare/worker.js"
+compatibility_date = "2026-10-01"
+
+# The Worker is deployed from this repo's main branch.
+# Configure OPENAI_API_KEY and PARENT_PASSPHRASE as encrypted secrets
+# in Cloudflare dashboard, not in this file.
+# Bind a KV namespace as LIMITS in Cloudflare before enabling generation.
